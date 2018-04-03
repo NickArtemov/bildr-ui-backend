@@ -1,36 +1,36 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import classNames from "classnames";
-import PropTypes from 'prop-types';
+import React from "react"
+import ReactDOM from "react-dom"
+import classNames from "classnames"
+import PropTypes from 'prop-types'
 
-import Icon from '../../layout/Icon';
+import Icon from '../../layout/Icon'
 import {Link, NavLink, withRouter} from 'react-router-dom'
 import NavContainer from "./NavContainer"
 import {Navigation} from "./Navigation"
 
 class NavItemComponentOld extends React.Component {
   constructor(props) {
-    super(props);
-    
-    return this;
+    super(props)
+
+    return this
   }
-  
+
   getTotalHeight() {
-    var height = 45;
+    var height = 45
 
     if (this.children) {
-      height += this.children.length * 45;
+      height += this.children.length * 45
     }
 
-    return height;
+    return height
   }
 
   openSidebarNav(fullOpen, height, isClosing) {
-    if (this.state.open && !height) return;
+    if (this.state.open && !height) return
 
-    height = height || 0;
-    var thisHeight = this.getTotalHeight();
-    var totalHeight = height + thisHeight;
+    height = height || 0
+    var thisHeight = this.getTotalHeight()
+    var totalHeight = height + thisHeight
 
     /*
     if (this.childSidebarNav) {
@@ -55,11 +55,11 @@ class NavItemComponentOld extends React.Component {
     }
     */
   }
-  
-  closeSidebarNav(collapseRoot) {
-    var _this7 = this;
 
-    if (!this.state.open) return;
+  closeSidebarNav(collapseRoot) {
+    var _this7 = this
+
+    if (!this.state.open) return
 
     /*
     var thisHeight = this.getTotalHeight();
@@ -77,119 +77,119 @@ class NavItemComponentOld extends React.Component {
     }
     */
   }
-  
+
   toggleSidebarNav() {
     if (this.state.height === 45) {
-      this.openSidebarNav();
+      this.openSidebarNav()
     } else {
-      this.closeSidebarNav();
+      this.closeSidebarNav()
     }
   }
 
   getTopmostLi(node, li, original_node) {
-    if (!original_node) original_node = node;
+    if (!original_node) original_node = node
     while (node.parentNode) {
       if (node.parentNode.className.search('sidebar-nav-container') !== -1) {
         if (li) {
-          return li;
+          return li
         } else {
-          return original_node;
+          return original_node
         }
       }
 
       if (node.parentNode.nodeName.toLowerCase() === 'li') {
-        li = node.parentNode;
+        li = node.parentNode
       }
-      node = node.parentNode;
+      node = node.parentNode
     }
   }
-  
+
   getSiblingsLi(node) {
-    var original_node = node;
-    var sibilings = [];
+    var original_node = node
+    var sibilings = []
     while (node.nextSibling) {
-      sibilings.push(node.nextSibling);
-      node = node.nextSibling;
+      sibilings.push(node.nextSibling)
+      node = node.nextSibling
     }
-    node = original_node;
+    node = original_node
     while (node.previousSibling) {
-      sibilings.push(node.previousSibling);
-      node = node.previousSibling;
+      sibilings.push(node.previousSibling)
+      node = node.previousSibling
     }
 
-    return sibilings;
+    return sibilings
   }
-  
+
   getSiblingsNav(node) {
-    var original_node = node;
-    var siblings = [];
+    var original_node = node
+    var siblings = []
     while (node.nextSibling) {
       if (node.nextSibling.className.search('sidebar-nav') !== -1) {
-        siblings.push(node.nextSibling);
+        siblings.push(node.nextSibling)
       }
-      node = node.nextSibling;
+      node = node.nextSibling
     }
-    node = original_node;
+    node = original_node
     while (node.previousSibling) {
       if (node.previousSibling.className.search('sidebar-nav') !== -1) {
-        siblings.push(node.previousSibling);
+        siblings.push(node.previousSibling)
       }
-      node = node.previousSibling;
+      node = node.previousSibling
     }
 
-    return siblings;
+    return siblings
   }
 
 
   getTopmostSidebar(node) {
     while (node.parentNode) {
       if (node.parentNode.className.search('sidebar__main') !== -1) {
-        return node.parentNode;
+        return node.parentNode
       }
-      node = node.parentNode;
+      node = node.parentNode
     }
   }
 
   checkAndClose(props) {
-    var node = ReactDOM.findDOMNode(this._node);
+    var node = ReactDOM.findDOMNode(this._node)
 
-    var topmostLi = this.getTopmostLi(node);
-    var topmostSiblingLis = this.getSiblingsLi(topmostLi);
-    var siblingLis = this.getSiblingsLi(node);
-    var topmostSidebar = this.getTopmostSidebar(node);
-    var id = parseInt(topmostSidebar.getAttribute('data-id')) || 0;
-/*
-    _Dispatcher2.default.publish('sidebar:controlbtn', { sidebar: id });
-    _Dispatcher2.default.publish('sidebar:keychange', id);
+    var topmostLi = this.getTopmostLi(node)
+    var topmostSiblingLis = this.getSiblingsLi(topmostLi)
+    var siblingLis = this.getSiblingsLi(node)
+    var topmostSidebar = this.getTopmostSidebar(node)
+    var id = parseInt(topmostSidebar.getAttribute('data-id')) || 0
+    /*
+        _Dispatcher2.default.publish('sidebar:controlbtn', { sidebar: id });
+        _Dispatcher2.default.publish('sidebar:keychange', id);
 
-    for (var i = siblingLis.length - 1; i >= 0; i--) {
-      var li = siblingLis[i];
-      if (li && typeof li.close === 'function') li.close();
-    };
+        for (var i = siblingLis.length - 1; i >= 0; i--) {
+          var li = siblingLis[i];
+          if (li && typeof li.close === 'function') li.close();
+        };
 
-    for (var i = 0; i < topmostSiblingLis.length; i++) {
-      var li = topmostSiblingLis[i];
-      if (li && typeof li.close === 'function') li.close();
-    }
-
-    try {
-      var height = node.getClientRects()[0].height;
-      var top = node.getClientRects()[0].top;
-      setTimeout(function () {
-        _Dispatcher2.default.publish('sidebar:reposition', node, top, height);
-
-        if ((0, _isTouchDevice2.default)()) {
-          _Dispatcher2.default.publish('sidebar:closeSidebar');
+        for (var i = 0; i < topmostSiblingLis.length; i++) {
+          var li = topmostSiblingLis[i];
+          if (li && typeof li.close === 'function') li.close();
         }
-      }, 300);
-    } catch (e) {}
-*/
+
+        try {
+          var height = node.getClientRects()[0].height;
+          var top = node.getClientRects()[0].top;
+          setTimeout(function () {
+            _Dispatcher2.default.publish('sidebar:reposition', node, top, height);
+
+            if ((0, _isTouchDevice2.default)()) {
+              _Dispatcher2.default.publish('sidebar:closeSidebar');
+            }
+          }, 300);
+        } catch (e) {}
+    */
   }
-  
+
   closeNav() {
-    this.closeSidebarNav();
+    this.closeSidebarNav()
   }
-  
+
   activateSidebar() {
     /*
     var found = false,
@@ -224,10 +224,10 @@ class NavItemComponentOld extends React.Component {
     }
     */
   }
-  
+
   closeSidebarRoot() {
     if (!this.props.sidebarNavItem) {
-      this.closeSidebarNav();
+      this.closeSidebarNav()
     }
   }
 
@@ -238,7 +238,7 @@ class NavItemComponentOld extends React.Component {
     _Dispatcher2.default.unsubscribe(this.searchHandler);
     */
   }
-  
+
   componentDidMount() {
     /*
     this.activateHandler = _Dispatcher2.default.subscribe('sidebar:activate', this.activateSidebar.bind(this));
@@ -262,7 +262,7 @@ class NavItemComponentOld extends React.Component {
     }
     */
 
-    var node = ReactDOM.findDOMNode(this._node);
+    var node = ReactDOM.findDOMNode(this._node)
     //node.close = this.closeNav.bind(this);
 
     //enableStateForPathname(this.props.location.pathname, this.props);
@@ -281,7 +281,7 @@ class NavItemComponentOld extends React.Component {
 
       _this5.closeNav();
     */
-    
+
     /*
     this.props.store.dispatch({
       type: 'INCREMENT'
@@ -290,19 +290,19 @@ class NavItemComponentOld extends React.Component {
 
     //this.getTotalHeight()
     //this.height = this.getTotalHeight();
-    
-    this.children.push('show');
-    console.log(this.children);
+
+    this.children.push('show')
+    console.log(this.children)
   }
-    
+
   render() {
 
     var classes = classNames({
       'open': true,
       'active': false,
       'sidebar-nav-item': true
-    });
-    
+    })
+
     /*
     var toggleClasses = classNames({
       'toggle-button': true,
@@ -310,80 +310,80 @@ class NavItemComponentOld extends React.Component {
       'opposite': this.state.opposite
     });
     */
-    
 
-        
-    var style = { height: 'auto' };
+
+    var style = {height: 'auto'}
 
     var props = {
       name: null,
       style: style,
       tabIndex: '-1',
       className: classes.trim()
-    };
+    }
 
-    var RouteLink = 'a';
+    var RouteLink = 'a'
     var componentProps = {
       name: null,
       tabIndex: -1,
       href: this.props.href || '',
       /*onClick: this.handleClick,*/
-      style: { height: 45 }
-    };
+      style: {height: 45}
+    }
 
-    var pointerEvents = 'all';
+    var pointerEvents = 'all'
     if (this.props.hasOwnProperty('href') && this.props.href.length && this.props.href !== '#') {
-      RouteLink = Link;
+      RouteLink = Link
 
-      componentProps.to = this.props.href;
-      delete componentProps.href;
+      componentProps.to = this.props.href
+      delete componentProps.href
 
       if (this.props.href.search(":") !== -1) {
-        pointerEvents = 'none';
+        pointerEvents = 'none'
       }
     }
 
-    var isRoot = this.props.sidebarNavItem ? false : true;
+    var isRoot = this.props.sidebarNavItem ? false : true
 
-    var self = this;
+    var self = this
     this.children = React.Children.map(this.props.children, function (child) {
       return React.cloneElement(child, {
         sidebarNavItem: self,
         SidebarNavID: self.props.SidebarNavID,
         rootSidebarNavItem: isRoot ? self : self.props.rootSidebarNavItem
-      });
-    });
-    
-    
-    var ToggleIcon = null;
+      })
+    })
+
+
+    var ToggleIcon = null
     if (this.children) {
       var toggleClasses = classNames({
         'toggle-button': true,
         'open': false,
         'opposite': false
-      });
-      
-      ToggleIcon = (<Icon className={toggleClasses} bundle="fontello" glyph="left-open-3" />);
+      })
+
+      ToggleIcon = (<Icon className={toggleClasses} bundle="fontello" glyph="left-open-3"/>)
     }
-    
-    var href = "#";
+
+    var href = "#"
     if (this.props.hasOwnProperty('href') && this.props.href.length > 0) {
-      href = this.props.href;
+      href = this.props.href
     }
-    
+
     //console.log(isRoot ? self : self.props.rootSidebarNavItem);
-     
+
     return (
-      <li tabIndex="-1" className="sidebar-nav-item" style={{display: "block", pointerEvents: "all", height: "45px" }} onClick={this.handleClick.bind(this)}>
+      <li tabIndex="-1" className="sidebar-nav-item" style={{display: "block", pointerEvents: "all", height: "45px"}}
+          onClick={this.handleClick.bind(this)}>
         <Link to={href}>
-          <Icon bundle={this.props.bundle} glyph={this.props.glyph} />
+          <Icon bundle={this.props.bundle} glyph={this.props.glyph}/>
           <span className="name">{this.props.name}</span>
           {ToggleIcon}
         </Link>
 
         {this.children}
       </li>
-    );
+    )
   }
 }
 
@@ -403,16 +403,23 @@ class NavItemComponent extends React.Component {
   render() {
     const {href, name, glyph, bundle, history} = this.props
 
-    console.log(history.location.pathname, href)
     const {sidebarNavItem} = this.props
-    let self = this;
-    let childLength = 1;
+    let self = this
+    let childLength = 1
     let isLeaf = false
+    let openedWithChild = false
     this.children = React.Children.map(this.props.children, function (child) {
       childLength = child.props.children.length === 1 ? 1 : child.props.children.length
 
-      React.Children.map(child.props.children, function(ch) {
-        isLeaf = !ch.props.hasOwnProperty("children")
+      React.Children.map(child.props.children, function (ch) {
+        if (ch.props.hasOwnProperty("children")) {
+        } else {
+          isLeaf = true
+        }
+        if(history.location.pathname === ch.props.href) {
+          openedWithChild = true
+        }
+
       })
 
       return React.cloneElement(child, {
@@ -421,40 +428,38 @@ class NavItemComponent extends React.Component {
         rootSidebarNavItem: !sidebarNavItem ? self : self.props.rootSidebarNavItem
       })
     })
-
-    let ToggleIcon = null;
+    let ToggleIcon = null
     if (this.children) {
       let toggleClasses = classNames({
         'toggle-button': true,
-        'open': this.state.open,
+        'open': this.state.open || openedWithChild,
         'opposite': false
-      });
+      })
 
-      ToggleIcon = (<Icon className={toggleClasses} bundle="fontello" glyph="left-open-3" />);
+      ToggleIcon = (<Icon className={toggleClasses} bundle="fontello" glyph="left-open-3"/>)
     }
     const {open, height} = this.state
     let liStyle = {
       display: "block",
       pointerEvents: "all",
-      height: (open && isLeaf) ? height * (childLength + 1) : height,
+      height: ((open || openedWithChild) && isLeaf) ? height * (childLength + 1) : height,
     }
 
     return (
-        <li tabIndex="-1" className={classNames("sidebar-nav-item", {active: history.location.pathname === href})} style={liStyle}>
-          <Link to={href || "#"}  onClick={this.handleClick} >
-            <Icon bundle={bundle} glyph={glyph} />
-            <span className="name">{name}</span>
-            {ToggleIcon}
-          </Link>
+      <li tabIndex="-1" className={classNames("sidebar-nav-item", {active: history.location.pathname === href})}
+          style={liStyle}>
+        <Link to={href || "#"} onClick={this.handleClick}>
+          <Icon bundle={bundle} glyph={glyph}/>
+          <span className="name">{name}</span>
+          {ToggleIcon}
+        </Link>
 
-          {this.children}
-        </li>
+        {this.children}
+      </li>
     )
   }
 
   handleClick() {
-    // this.children.push('show');
-    console.log(this.props.children)
     this.setState((s) => ({
       open: !s.open,
     }))
@@ -462,6 +467,7 @@ class NavItemComponent extends React.Component {
   }
 
 }
+
 NavItemComponent.propTypes = {
   open: PropTypes.bool,
   href: PropTypes.string,
@@ -473,5 +479,4 @@ NavItemComponent.propTypes = {
   rootSidebarNavItem: PropTypes.node,
 }
 
-
-export default NavItemComponent =  withRouter(NavItemComponent)
+export default NavItemComponent = withRouter(NavItemComponent)

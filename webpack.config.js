@@ -10,7 +10,8 @@ module.exports = {
   },
   output: {
     filename: 'js/[name].js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: "/"
   },
   devtool: "sourcemap",
   resolve: {
@@ -65,28 +66,29 @@ module.exports = {
       },
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/font-woff&name=/fonts/[hash].[ext]"
+        loader: "url-loader?limit=10000&mimetype=application/font-woff&name=fonts/[hash].[ext]"
       },
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/font-woff&name=/fonts/[hash].[ext]"
+        loader: "url-loader?limit=10000&mimetype=application/font-woff&name=fonts/[hash].[ext]"
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/octet-stream&name=/fonts/[hash].[ext]"
+        loader: "url-loader?limit=10000&mimetype=application/octet-stream&name=fonts/[hash].[ext]"
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "file-loader&name=./fonts/[hash].[ext]"
+        loader: "file-loader&name=fonts/[hash].[ext]"
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=image/svg+xml&name=./fonts/[hash].[ext]"
+        loader: "url-loader?limit=10000&mimetype=image/svg+xml&name=fonts/[hash].[ext]"
       },
     ]
   },
   devServer: {
     contentBase: path.resolve(__dirname, "dist"),
+    historyApiFallback: true,
     headers: {
       'Access-Control-Allow-Origin': '*'
     }
