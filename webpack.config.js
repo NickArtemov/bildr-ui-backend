@@ -12,6 +12,7 @@ module.exports = {
     filename: 'js/[name].js',
     path: path.resolve(__dirname, 'dist')
   },
+  devtool: "sourcemap",
   resolve: {
     alias: {
       modernizr$: path.resolve(__dirname, ".modernizrrc")
@@ -59,7 +60,7 @@ module.exports = {
       },
 	  {
         test: /\.(ico|gif|png|jpg|jpeg|svg|webp)$/,
-        loaders: ["file-loader?context=public&name=/[path][name].[ext]"],
+        loaders: ["url-loader?context=public&name=/media/[name].[hash].[ext]"],
         exclude: /node_modules/
       },
       {
