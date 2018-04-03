@@ -1,11 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
+import PropTypes from 'prop-types';
 
-import Icon from '../layout/Icon';
-import { Link } from 'react-router-dom';
+import Icon from '../../layout/Icon';
+import {Link, NavLink, withRouter} from 'react-router-dom'
+import NavContainer from "./NavContainer"
+import {Navigation} from "./Navigation"
 
-export default class NavItemComponent extends React.Component {
+class NavItemComponentOld extends React.Component {
   constructor(props) {
     super(props);
     
@@ -383,3 +386,92 @@ export default class NavItemComponent extends React.Component {
     );
   }
 }
+
+
+class NavItemComponent extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      open: this.props.open,
+      height: 45
+    }
+
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  render() {
+    const {href, name, glyph, bundle, history} = this.props
+
+    console.log(history.location.pathname, href)
+    const {sidebarNavItem} = this.props
+    let self = this;
+    let childLength = 1;
+    let isLeaf = false
+    this.children = React.Children.map(this.props.children, function (child) {
+      childLength = child.props.children.length === 1 ? 1 : child.props.children.length
+
+      React.Children.map(child.props.children, function(ch) {
+        isLeaf = !ch.props.hasOwnProperty("children")
+      })
+
+      return React.cloneElement(child, {
+        sidebarNavItem: self,
+        SidebarNavID: self.props.SidebarNavID,
+        rootSidebarNavItem: !sidebarNavItem ? self : self.props.rootSidebarNavItem
+      })
+    })
+
+    let ToggleIcon = null;
+    if (this.children) {
+      let toggleClasses = classNames({
+        'toggle-button': true,
+        'open': this.state.open,
+        'opposite': false
+      });
+
+      ToggleIcon = (<Icon className={toggleClasses} bundle="fontello" glyph="left-open-3" />);
+    }
+    const {open, height} = this.state
+    let liStyle = {
+      display: "block",
+      pointerEvents: "all",
+      height: (open && isLeaf) ? height * (childLength + 1) : height,
+    }
+
+    return (
+        <li tabIndex="-1" className={classNames("sidebar-nav-item", {active: history.location.pathname === href})} style={liStyle}>
+          <Link to={href || "#"}  onClick={this.handleClick} >
+            <Icon bundle={bundle} glyph={glyph} />
+            <span className="name">{name}</span>
+            {ToggleIcon}
+          </Link>
+
+          {this.children}
+        </li>
+    )
+  }
+
+  handleClick() {
+    // this.children.push('show');
+    console.log(this.props.children)
+    this.setState((s) => ({
+      open: !s.open,
+    }))
+
+  }
+
+}
+NavItemComponent.propTypes = {
+  open: PropTypes.bool,
+  href: PropTypes.string,
+  name: PropTypes.string,
+  bundle: PropTypes.string,
+  glyph: PropTypes.string,
+  SidebarNavID: PropTypes.number,
+  sidebarNavItem: PropTypes.node,
+  rootSidebarNavItem: PropTypes.node,
+}
+
+
+export default NavItemComponent =  withRouter(NavItemComponent)

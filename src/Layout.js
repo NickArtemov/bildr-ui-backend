@@ -14,8 +14,9 @@ import reducers from './reducers' // Or wherever you keep your reducers
 import Header from './layout/header';
 import Footer from './layout/footer';
 
-import { Body, Sidebar } from './App';
+import { Body } from './App';
 import MainContainer from './MainContainer';
+import {Sidebar} from "./components/Sidebar"
 
 // Create a history of your choosing (we're using a browser history in this case)
 const history = createHistory();

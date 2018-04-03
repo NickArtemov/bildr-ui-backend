@@ -3,13 +3,15 @@ import classNames from 'classnames';
 
 import { SidebarBtn, Navbar, Nav, NavItem, Icon, Grid, Row, Col } from 'rubix';
 
+const logo = require("../assets/imgs/common/logo.png");
+
 class Brand extends React.Component {
   render() {
     return (
       <Navbar.Header {...this.props}>
         <Navbar.Brand tabIndex='-1'>
           <a href='#'>
-            <img src='/imgs/common/logo.png' alt='rubix' width='111' height='28' />
+            <img src={logo} alt='rubix' width='111' height='28' />
           </a>
         </Navbar.Brand>
       </Navbar.Header>
@@ -19,7 +21,7 @@ class Brand extends React.Component {
 
 class HeaderNavigation extends React.Component {
   render() {
-    var props = {
+    const props = {
       ...this.props,
       className: classNames('pull-right', this.props.className)
     };

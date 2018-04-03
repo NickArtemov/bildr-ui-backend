@@ -1,7 +1,9 @@
 import React from 'react';
-import Icon from '../layout/Icon';
+import Icon from '../../layout/Icon';
 import { Grid, Row, Col } from 'rubix';
-const avatar = require("../assets/imgs/app/avatars/avatar0.png");
+import {Navigation} from "../Navigation";
+
+const avatar = require("../../assets/imgs/app/avatars/avatar0.png");
 
 export class Sidebar extends React.Component {
   render() {

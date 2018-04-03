@@ -18,7 +18,7 @@ export default class Footer extends React.Component {
   }
 
   render() {
-    var year = new Date().getFullYear();
+    const year = new Date().getFullYear();
     return (
       <div id='footer-container'>
         <Grid id='footer' className='text-center'>
