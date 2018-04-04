@@ -373,51 +373,115 @@ class NavItemComponentOld extends React.Component {
     //console.log(isRoot ? self : self.props.rootSidebarNavItem);
 
     return (
-      <li tabIndex="-1" className="sidebar-nav-item" style={{display: "block", pointerEvents: "all", height: "45px"}}
-          onClick={this.handleClick.bind(this)}>
-        <Link to={href}>
-          <Icon bundle={this.props.bundle} glyph={this.props.glyph}/>
-          <span className="name">{this.props.name}</span>
-          {ToggleIcon}
-        </Link>
+        <li tabIndex="-1" className="sidebar-nav-item" style={{display: "block", pointerEvents: "all", height: "45px"}}
+            onClick={this.handleClick.bind(this)}>
+          <Link to={href}>
+            <Icon bundle={this.props.bundle} glyph={this.props.glyph}/>
+            <span className="name">{this.props.name}</span>
+            {ToggleIcon}
+          </Link>
 
-        {this.children}
-      </li>
+          {this.children}
+        </li>
     )
   }
 }
 
 
 class NavItemComponent extends React.Component {
+
+  liStyle = {
+    display: "block",
+    pointerEvents: "all",
+  }
+
   constructor(props) {
     super(props)
 
     this.state = {
-      open: this.props.open,
+      open: false,
       height: 45
     }
 
     this.handleClick = this.handleClick.bind(this)
   }
 
+  componentWillMount() {
+    const {open, height} = this.state
+    this.childLength = 1
+    this.isLeaf = false
+    this.openedWithChild = false
+
+    this.getChildren()
+    this.setState({open: this.openedWithChild})
+
+    this.toggleClasses = classNames({
+      'toggle-button': true,
+      'open': !open && this.openedWithChild,
+      'opposite': false
+    })
+    this.liStyle = {
+      ...this.liStyle,
+      height: ((open || this.openedWithChild) && this.isLeaf) ? height * (this.childLength + 1) : height,
+    }
+    // this.state = {
+    //   ...this.state,
+    //   open: this.openedWithChild || open
+    // }
+  }
+
   render() {
     const {href, name, glyph, bundle, history} = this.props
 
-    const {sidebarNavItem} = this.props
-    let self = this
-    let childLength = 1
-    let isLeaf = false
-    let openedWithChild = false
+    let ToggleIcon = null
+    if (this.children) {
+      ToggleIcon = (<Icon className={this.toggleClasses} bundle="fontello" glyph="left-open-3"/>)
+    }
+
+
+    return (
+        <li tabIndex="-1" className={classNames("sidebar-nav-item", {active: history.location.pathname === href})}
+            style={this.liStyle}>
+          <Link to={href || "#"} onClick={this.handleClick}>
+            <Icon bundle={bundle} glyph={glyph}/>
+            <span className="name">{name}</span>
+            {ToggleIcon}
+          </Link>
+          {this.children}
+        </li>
+    )
+  }
+
+  handleClick() {
+    const {open, height} = this.state
+    this.liStyle = {
+      ...this.liStyle,
+      height: ((!open) && this.isLeaf) ? height * (this.childLength + 1) : height,
+    }
+    this.toggleClasses = classNames({
+      'toggle-button': true,
+      'open': !this.state.open,
+      'opposite': false
+    })
+    this.setState((s) => ({
+      open: !s.open,
+    }))
+
+  }
+
+  getChildren() {
+    const {sidebarNavItem, history} = this.props
+    const self = this
     this.children = React.Children.map(this.props.children, function (child) {
-      childLength = child.props.children.length === 1 ? 1 : child.props.children.length
+      self.childLength = child.props.children.length === 1 ? 1 : child.props.children.length
 
       React.Children.map(child.props.children, function (ch) {
         if (ch.props.hasOwnProperty("children")) {
         } else {
-          isLeaf = true
+          self.isLeaf = true
         }
-        if(history.location.pathname === ch.props.href) {
-          openedWithChild = true
+        if (history.location.pathname === ch.props.href) {
+          self.openedWithChild = true
         }
 
       })
@@ -428,42 +492,6 @@ class NavItemComponent extends React.Component {
         rootSidebarNavItem: !sidebarNavItem ? self : self.props.rootSidebarNavItem
       })
     })
-    let ToggleIcon = null
-    if (this.children) {
-      let toggleClasses = classNames({
-        'toggle-button': true,
-        'open': this.state.open || openedWithChild,
-        'opposite': false
-      })
-
-      ToggleIcon = (<Icon className={toggleClasses} bundle="fontello" glyph="left-open-3"/>)
-    }
-    const {open, height} = this.state
-    let liStyle = {
-      display: "block",
-      pointerEvents: "all",
-      height: ((open || openedWithChild) && isLeaf) ? height * (childLength + 1) : height,
-    }
-
-    return (
-      <li tabIndex="-1" className={classNames("sidebar-nav-item", {active: history.location.pathname === href})}
-          style={liStyle}>
-        <Link to={href || "#"} onClick={this.handleClick}>
-          <Icon bundle={bundle} glyph={glyph}/>
-          <span className="name">{name}</span>
-          {ToggleIcon}
-        </Link>
-
-        {this.children}
-      </li>
-    )
-  }
-
-  handleClick() {
-    this.setState((s) => ({
-      open: !s.open,
-    }))
-
   }
 
 }
