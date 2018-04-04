@@ -1,0 +1,5 @@
+.sidebar-nav {
+  & > li {
+    transition: height .3s cubic-bezier(0.2, 0.3, 0.3, 1.2);
+  }
+}
